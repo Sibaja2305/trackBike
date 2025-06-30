@@ -1,6 +1,8 @@
-// screens/Profile.js
+
 
 import React, { useContext, useEffect, useState } from "react";
+import { useFocusEffect } from '@react-navigation/native';
+
 import {
   View,
   Text,
@@ -38,7 +40,8 @@ export default function Profile({ navigation }) {
         console.log('Error al cerrar sesión', error);
       });
   };
-  useEffect(() => {
+ useFocusEffect(
+  React.useCallback(() => {
     const fetchBikes = async () => {
       try {
         const q = query(
@@ -54,10 +57,11 @@ export default function Profile({ navigation }) {
         Alert.alert("Error", "No se pudieron cargar las bicicletas");
       }
     };
-    fetchBikes();
-  }, [user.uid]);
 
-  // map type code to display label
+    fetchBikes();
+  }, [user.uid])
+);
+  
   const typeLabel = (type) => {
     const map = { ruta: "Ruta", montaña: "MTB", bmx: "BMX", hibrida: "Híbrida" };
     return map[type] || type;
@@ -65,7 +69,7 @@ export default function Profile({ navigation }) {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.inner}>
-      {/* Header */}
+      
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back-outline" size={24} color="#FFF" />
@@ -73,7 +77,7 @@ export default function Profile({ navigation }) {
         <Text style={styles.headerTitle}>Mi perfil</Text>
       </View>
 
-      {/* Profile Info */}
+     
       <View style={styles.profileInfo}>
         <View style={styles.avatar}>
           <Ionicons name="person-circle-outline" size={80} color="#888" />
@@ -84,7 +88,7 @@ export default function Profile({ navigation }) {
 
       <View style={styles.divider} />
 
-      {/* Mis bicicletas */}
+    
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Mis bicicletas</Text>
         <TouchableOpacity onPress={() => navigation.navigate("MyBikes")}>
@@ -116,7 +120,7 @@ export default function Profile({ navigation }) {
 
       <View style={styles.divider} />
 
-      {/* Configuración */}
+     
       <Text style={styles.sectionTitle}>Configuración</Text>
       <TouchableOpacity style={styles.configItem} onPress={() => {}}>
         <Ionicons

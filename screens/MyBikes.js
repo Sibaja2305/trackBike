@@ -1,6 +1,6 @@
 // screens/MyBikes.js
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -21,38 +21,42 @@ import {
 } from "firebase/firestore";
 import appFirebase from "../credenciales";
 import { AuthContext } from "../context/AuthContext";
-
+import { useFocusEffect } from "@react-navigation/native";
 const db = getFirestore(appFirebase);
 
 export default function MyBikes({ navigation }) {
   const { user } = useContext(AuthContext);
   const [bikes, setBikes] = useState([]);
-
-  useEffect(() => {
-    fetchBikes();
-  }, []);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedBikeId, setSelectedBikeId] = useState(null);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchBikes();
+    }, [])
+  );
 
   const fetchBikes = async () => {
     try {
-      const q = query(
-        collection(db, "bikes"),
-        where("owner", "==", user.uid)
-      );
+      const q = query(collection(db, "bikes"), where("owner", "==", user.uid));
       const snap = await getDocs(q);
-      setBikes(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      setBikes(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
     } catch (err) {
       console.error(err);
       Alert.alert("Error", "No se pudieron cargar las bicicletas");
     }
   };
 
-  const handleDelete = async (id) => {
+  const confirmDelete = async () => {
     try {
-      await deleteDoc(doc(db, "bikes", id));
-      setBikes(bikes.filter(b => b.id !== id));
+      await deleteDoc(doc(db, "bikes", selectedBikeId));
+      setBikes((prev) => prev.filter((b) => b.id !== selectedBikeId));
+      setShowDeleteModal(false);
+      setSelectedBikeId(null);
+      Alert.alert("Eliminado", "La bicicleta ha sido eliminada.");
     } catch (err) {
       console.error(err);
-      Alert.alert("Error", "No se pudo eliminar");
+      Alert.alert("Error", "No se pudo eliminar.");
+      setShowDeleteModal(false);
     }
   };
 
@@ -60,10 +64,14 @@ export default function MyBikes({ navigation }) {
     const m = { ruta: "Ruta", montaña: "MTB", bmx: "BMX", hibrida: "Híbrida" };
     return m[type] || type;
   };
+  const handleDelete = (bikeId) => {
+  setSelectedBikeId(bikeId);
+  setShowDeleteModal(true);
+};
 
   return (
     <View style={styles.container}>
-      {/* Header */}
+     
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back-outline" size={24} color="#FFF" />
@@ -75,9 +83,9 @@ export default function MyBikes({ navigation }) {
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        {bikes.map(bike => (
+        {bikes.map((bike) => (
           <View key={bike.id} style={styles.card}>
-            {/* header de tarjeta */}
+            
             <View style={styles.cardHeader}>
               <Ionicons
                 name="bicycle-outline"
@@ -93,27 +101,18 @@ export default function MyBikes({ navigation }) {
               </View>
               <TouchableOpacity
                 style={styles.iconBtn}
-                onPress={() => {/* detalles si quieres */}}
+                onPress={() => navigation.navigate("EditBike", { bike })}
               >
-                <Ionicons
-                  name="document-text-outline"
-                  size={20}
-                  color="#FFF"
-                />
+                <Ionicons name="create-outline" size={20} color="#FFD700" />
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.iconBtn}
-                onPress={() => handleDelete(bike.id)}
+                onPress={() => handleDelete(bike.id)} 
               >
-                <Ionicons
-                  name="trash-outline"
-                  size={20}
-                  color="#C0392B"
-                />
+                <Ionicons name="trash-outline" size={20} color="#C0392B" />
               </TouchableOpacity>
             </View>
 
-            {/* body con datos */}
             <View style={styles.cardBody}>
               <View style={styles.row}>
                 <View style={styles.field}>
@@ -141,6 +140,36 @@ export default function MyBikes({ navigation }) {
           </View>
         ))}
       </ScrollView>
+      {showDeleteModal && (
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Ionicons name="trash-outline" size={48} color="#C0392B" />
+            <Text style={styles.modalTitle}>¿Eliminar bicicleta?</Text>
+            <Text style={styles.modalMessage}>
+              ¿Estás seguro de que deseas eliminar esta bicicleta? Esta acción
+              no se puede deshacer.
+            </Text>
+
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, { backgroundColor: "#555" }]}
+                onPress={() => {
+                  setShowDeleteModal(false);
+                  setSelectedBikeId(null);
+                }}
+              >
+                <Text style={styles.modalButtonText}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, { backgroundColor: "#C0392B" }]}
+                onPress={confirmDelete}
+              >
+                <Text style={styles.modalButtonText}>Eliminar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      )}
     </View>
   );
 }
@@ -213,5 +242,53 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontSize: 14,
     marginTop: 2,
+  },
+  modalOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 100,
+  },
+  modalContainer: {
+    width: "80%",
+    backgroundColor: "#2C2C2C",
+    borderRadius: 12,
+    padding: 20,
+    alignItems: "center",
+  },
+  modalTitle: {
+    color: "#FFF",
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 12,
+  },
+  modalMessage: {
+    color: "#CCC",
+    fontSize: 14,
+    marginTop: 8,
+    textAlign: "center",
+  },
+  modalButtons: {
+    flexDirection: "row",
+    marginTop: 20,
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 10,
+    marginHorizontal: 6,
+    borderRadius: 20,
+    alignItems: "center",
+  },
+  modalButtonText: {
+    color: "#FFF",
+    fontSize: 14,
+    fontWeight: "600",
   },
 });

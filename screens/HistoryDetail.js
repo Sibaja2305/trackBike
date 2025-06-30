@@ -1,5 +1,3 @@
-// screens/MaintenanceDetails.js
-
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -15,7 +13,6 @@ export default function MaintenanceDetails({ navigation }) {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    // Simulación de carga de datos
     const dummy = {
       title: "Revisión general",
       status: "Completado",
@@ -34,8 +31,7 @@ export default function MaintenanceDetails({ navigation }) {
         { label: "Ajuste de cambios", amount: "₡5000" },
         { label: "Revisión de frenos", amount: "₡5000" },
       ],
-      note:
-        "Se recomienda cambiar de pastillas de freno en la próxima sesión.",
+      note: "Se recomienda cambiar de pastillas de freno en la próxima sesión.",
     };
     setTimeout(() => setData(dummy), 500);
   }, []);
@@ -55,7 +51,6 @@ export default function MaintenanceDetails({ navigation }) {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.inner}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back-outline" size={24} color="#FFF" />
@@ -64,7 +59,6 @@ export default function MaintenanceDetails({ navigation }) {
       </View>
       <View style={styles.divider} />
 
-      {/* Título + estado */}
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <Ionicons
@@ -81,7 +75,6 @@ export default function MaintenanceDetails({ navigation }) {
         <Text style={styles.cardDesc}>{data.description}</Text>
       </View>
 
-      {/* Información general */}
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>Información general</Text>
         <View style={styles.infoRow}>
@@ -106,7 +99,6 @@ export default function MaintenanceDetails({ navigation }) {
         </View>
       </View>
 
-      {/* Desglose de costos */}
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>Desglose de costos</Text>
         {data.costs.map((c) => (
@@ -121,7 +113,6 @@ export default function MaintenanceDetails({ navigation }) {
         </View>
       </View>
 
-      {/* Nota del técnico */}
       <View style={styles.card}>
         <Text style={styles.sectionTitle}>Nota del técnico</Text>
         <Text style={styles.noteText}>{data.note}</Text>
