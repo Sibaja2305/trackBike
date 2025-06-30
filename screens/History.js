@@ -1,5 +1,3 @@
-// screens/History.js
-
 import React, { useState } from "react";
 import {
   View,
@@ -55,7 +53,6 @@ export default function History({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back-outline" size={24} color="#FFF" />
@@ -63,14 +60,12 @@ export default function History({ navigation }) {
         <Text style={styles.headerTitle}>Historial de mantenimiento</Text>
       </View>
 
-      {/* Search Bar */}
       <TextInput
         style={styles.search}
         placeholder="Buscar en historial"
         placeholderTextColor="#888"
       />
 
-      {/* Tabs */}
       <View style={styles.tabs}>
         <TouchableOpacity
           style={[
@@ -106,14 +101,12 @@ export default function History({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* List */}
       <FlatList
         data={data}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            {/* Card Header */}
             <View style={styles.cardHeader}>
               <Ionicons
                 name="calendar-outline"
@@ -127,7 +120,7 @@ export default function History({ navigation }) {
               </View>
               {activeTab === "completed" ? (
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("HistoryDetail")} 
+                  onPress={() => navigation.navigate("HistoryDetail")}
                 >
                   <Ionicons
                     name="arrow-forward-outline"
@@ -141,7 +134,7 @@ export default function History({ navigation }) {
                 </View>
               )}
             </View>
-            {/* Card Body */}
+
             <View style={styles.cardBody}>
               <View style={styles.row}>
                 <View style={styles.field}>

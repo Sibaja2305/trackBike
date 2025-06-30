@@ -1,20 +1,16 @@
-// screens/Home.js
-
-import React, { useContext } from 'react';
+import React, { useContext } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
-  TouchableOpacity
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { AuthContext } from '../context/AuthContext';
+  TouchableOpacity,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { AuthContext } from "../context/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 
-
 function ActionButton({ icon, label, onPress }) {
-
   return (
     <TouchableOpacity style={styles.actionBtn} onPress={onPress}>
       <Ionicons name={icon} size={28} color="#1E90FF" />
@@ -36,12 +32,11 @@ function ListItem({ icon, title, time }) {
 }
 
 export default function Home() {
-   const navigation = useNavigation();
+  const navigation = useNavigation();
   const { user, logOut } = useContext(AuthContext);
 
   return (
     <View style={styles.container}>
-      {/* Top bar */}
       <View style={styles.header}>
         <Text style={styles.logo}>trackbike</Text>
         <TouchableOpacity onPress={logOut}>
@@ -50,13 +45,11 @@ export default function Home() {
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        {/* Saludo */}
         <Text style={styles.greeting}>
-          Bienvenido, {user?.displayName ?? user?.email.split('@')[0]}
+          Bienvenido, {user?.displayName ?? user?.email.split("@")[0]}
         </Text>
         <Text style={styles.subtitle}>¿Qué quieres hacer hoy?</Text>
 
-        {/* Próximo mantenimiento */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardTitle}>Próximo mantenimiento</Text>
@@ -80,17 +73,30 @@ export default function Home() {
           </View>
         </View>
 
-        {/* Acciones rápidas */}
         <Text style={styles.sectionTitle}>Acciones rápidas</Text>
         <View style={styles.actionsRow}>
-          <ActionButton icon="calendar-outline"    label="Agendar cita" onPress={() => {}} />
-          <ActionButton icon="time-outline"        label="Historial"      onPress={() => navigation.navigate("History")} />
-          <ActionButton icon="play-outline"        label="Tutoriales"    onPress={() => {}} />
-           <ActionButton icon="cart-outline"        label="Productos"     onPress={() => {}} /> 
-    
+          <ActionButton
+            icon="calendar-outline"
+            label="Agendar cita"
+            onPress={() => {}}
+          />
+          <ActionButton
+            icon="time-outline"
+            label="Historial"
+            onPress={() => navigation.navigate("History")}
+          />
+          <ActionButton
+            icon="play-outline"
+            label="Tutoriales"
+            onPress={() => {}}
+          />
+          <ActionButton
+            icon="cart-outline"
+            label="Productos"
+            onPress={() => {}}
+          />
         </View>
 
-        {/* Consejos de mantenimiento */}
         <Text style={styles.sectionTitle}>Consejos de mantenimiento</Text>
         <View style={styles.list}>
           <ListItem
@@ -105,7 +111,6 @@ export default function Home() {
           />
         </View>
 
-        {/* Recordatorios */}
         <Text style={styles.sectionTitle}>Recordatorios</Text>
         <View style={styles.list}>
           <ListItem
@@ -122,20 +127,20 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#171717',
+    backgroundColor: "#171717",
   },
   header: {
     height: 60,
     paddingHorizontal: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#1F1F1F',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#1F1F1F",
   },
   logo: {
-    color: '#1E90FF',
+    color: "#1E90FF",
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 
   content: {
@@ -143,86 +148,86 @@ const styles = StyleSheet.create({
   },
 
   greeting: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 22,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   subtitle: {
-    color: '#bbb',
+    color: "#bbb",
     fontSize: 16,
     marginTop: 4,
     marginBottom: 16,
   },
 
   card: {
-    backgroundColor: '#272727',
+    backgroundColor: "#272727",
     borderRadius: 12,
     padding: 16,
     marginBottom: 24,
   },
   cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 12,
   },
   cardTitle: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   cardLink: {
-    color: '#1E90FF',
+    color: "#1E90FF",
     fontSize: 14,
   },
   cardItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   itemTitle: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   itemSubtitle: {
-    color: '#aaa',
+    color: "#aaa",
     fontSize: 14,
     marginTop: 2,
   },
 
   sectionTitle: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 12,
   },
 
   actionsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 24,
   },
   actionBtn: {
-    width: '23%',
-    backgroundColor: '#272727',
+    width: "23%",
+    backgroundColor: "#272727",
     borderRadius: 10,
     paddingVertical: 12,
-    alignItems: 'center',
+    alignItems: "center",
   },
   actionLabel: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 12,
     marginTop: 6,
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   list: {
     marginBottom: 24,
   },
   listItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#272727',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#272727",
     borderRadius: 10,
     padding: 12,
     marginBottom: 12,
@@ -234,12 +239,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listTitle: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 15,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   listTime: {
-    color: '#aaa',
+    color: "#aaa",
     fontSize: 13,
     marginTop: 2,
   },
