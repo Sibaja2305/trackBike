@@ -1,38 +1,125 @@
-import { Text, StyleSheet, View, TouchableOpacity, Alert } from 'react-native';
-import React, { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
-import { getAuth, signOut } from 'firebase/auth';
+import React, { useContext } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { AuthContext } from "../context/AuthContext";
+import { useNavigation } from "@react-navigation/native";
 
-export default function Home({ navigation }) {
-  const { user } = useContext(AuthContext);
-  const auth = getAuth();
+function ActionButton({ icon, label, onPress }) {
+  return (
+    <TouchableOpacity style={styles.actionBtn} onPress={onPress}>
+      <Ionicons name={icon} size={28} color="#1E90FF" />
+      <Text style={styles.actionLabel}>{label}</Text>
+    </TouchableOpacity>
+  );
+}
 
-  const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        Alert.alert('Sesión cerrada');
-        navigation.replace('Login'); 
-      })
-      .catch((error) => {
-        console.log('Error al cerrar sesión', error);
-      });
-  };
+function ListItem({ icon, title, time }) {
+  return (
+    <View style={styles.listItem}>
+      <Ionicons name={icon} size={22} color="#fff" style={styles.listIcon} />
+      <View style={styles.listText}>
+        <Text style={styles.listTitle}>{title}</Text>
+        <Text style={styles.listTime}>{time}</Text>
+      </View>
+    </View>
+  );
+}
+
+export default function Home() {
+  const navigation = useNavigation();
+  const { user, logOut } = useContext(AuthContext);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Home</Text>
-      {user ? (
-        <>
-          <Text style={styles.text}>UID: {user.uid}</Text>
-          <Text style={styles.text}>Email: {user.email}</Text>
-        </>
-      ) : (
-        <Text style={styles.text}>Cargando usuario...</Text>
-      )}
+      <View style={styles.header}>
+        <Text style={styles.logo}>trackbike</Text>
+        <TouchableOpacity onPress={logOut}>
+          <Ionicons name="person-circle-outline" size={30} color="#fff" />
+        </TouchableOpacity>
+      </View>
 
-      <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
-        <Text style={styles.signOutText}>Cerrar Sesión</Text>
-      </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={styles.greeting}>
+          Bienvenido, {user?.displayName ?? user?.email.split("@")[0]}
+        </Text>
+        <Text style={styles.subtitle}>¿Qué quieres hacer hoy?</Text>
+
+        <View style={styles.card}>
+          <View style={styles.cardHeader}>
+            <Text style={styles.cardTitle}>Próximo mantenimiento</Text>
+            <TouchableOpacity>
+              <Text style={styles.cardLink}>Ver todo</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.cardItem}>
+            <Ionicons
+              name="calendar-outline"
+              size={24}
+              color="#1E90FF"
+              style={{ marginRight: 12 }}
+            />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.itemTitle}>Revisión General</Text>
+              <Text style={styles.itemSubtitle}>
+                Taller RBS BIKE 15 Mayo, 10:00am
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        <Text style={styles.sectionTitle}>Acciones rápidas</Text>
+        <View style={styles.actionsRow}>
+          <ActionButton
+            icon="calendar-outline"
+            label="Agendar cita"
+            onPress={() => {}}
+          />
+          <ActionButton
+            icon="time-outline"
+            label="Historial"
+            onPress={() => navigation.navigate("History")}
+          />
+          <ActionButton
+            icon="play-outline"
+            label="Tutoriales"
+            onPress={() => {}}
+          />
+          <ActionButton
+            icon="cart-outline"
+            label="Productos"
+            onPress={() => {}}
+          />
+        </View>
+
+        <Text style={styles.sectionTitle}>Consejos de mantenimiento</Text>
+        <View style={styles.list}>
+          <ListItem
+            icon="play-circle-outline"
+            title="Cómo ajustar tus frenos"
+            time="3 min de lectura"
+          />
+          <ListItem
+            icon="play-circle-outline"
+            title="Lubricación de cadena"
+            time="2 min de lectura"
+          />
+        </View>
+
+        <Text style={styles.sectionTitle}>Recordatorios</Text>
+        <View style={styles.list}>
+          <ListItem
+            icon="alarm-outline"
+            title="Lubricación de cadena"
+            time="2 min de lectura"
+          />
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -40,27 +127,125 @@ export default function Home({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: "#171717",
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  text: {
-    fontSize: 16,
-    marginTop: 10,
-  },
-  signOutButton: {
-    marginTop: 30,
-    backgroundColor: '#E74C3C',
-    paddingVertical: 10,
+  header: {
+    height: 60,
     paddingHorizontal: 20,
-    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#1F1F1F",
   },
-  signOutText: {
-    color: '#fff',
-    fontWeight: 'bold',
+  logo: {
+    color: "#1E90FF",
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+
+  content: {
+    padding: 20,
+  },
+
+  greeting: {
+    color: "#fff",
+    fontSize: 22,
+    fontWeight: "600",
+  },
+  subtitle: {
+    color: "#bbb",
+    fontSize: 16,
+    marginTop: 4,
+    marginBottom: 16,
+  },
+
+  card: {
+    backgroundColor: "#272727",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 24,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  cardTitle: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  cardLink: {
+    color: "#1E90FF",
+    fontSize: 14,
+  },
+  cardItem: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  itemTitle: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  itemSubtitle: {
+    color: "#aaa",
+    fontSize: 14,
+    marginTop: 2,
+  },
+
+  sectionTitle: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 12,
+  },
+
+  actionsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 24,
+  },
+  actionBtn: {
+    width: "23%",
+    backgroundColor: "#272727",
+    borderRadius: 10,
+    paddingVertical: 12,
+    alignItems: "center",
+  },
+  actionLabel: {
+    color: "#fff",
+    fontSize: 12,
+    marginTop: 6,
+    textAlign: "center",
+  },
+
+  list: {
+    marginBottom: 24,
+  },
+  listItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#272727",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 12,
+  },
+  listIcon: {
+    marginRight: 12,
+  },
+  listText: {
+    flex: 1,
+  },
+  listTitle: {
+    color: "#fff",
+    fontSize: 15,
+    fontWeight: "500",
+  },
+  listTime: {
+    color: "#aaa",
+    fontSize: 13,
+    marginTop: 2,
   },
 });
