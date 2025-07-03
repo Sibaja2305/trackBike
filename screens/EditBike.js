@@ -1,5 +1,3 @@
-// screens/AddBike.js
-
 import React, { useState, useContext, useEffect } from "react";
 import {
   View,
@@ -16,18 +14,20 @@ import { Ionicons } from "@expo/vector-icons";
 import DropDownPicker from "react-native-dropdown-picker";
 import {
   getFirestore,
-  collection,
-  addDoc,
-  serverTimestamp,
+  doc,
+  updateDoc,
 } from "firebase/firestore";
 import appFirebase from "../credenciales";
 import { AuthContext } from "../context/AuthContext";
-
+import { useRoute, useNavigation } from "@react-navigation/native";
+import { useFocusEffect } from '@react-navigation/native';
 const db = getFirestore(appFirebase);
 
-export default function AddBike({ navigation }) {
+export default function EditBike() {
   const { user } = useContext(AuthContext);
-
+  const route = useRoute();
+  const navigation = useNavigation();
+  const { bike } = route.params;
 
   const [name, setName] = useState("");
   const [brand, setBrand] = useState("");
@@ -36,7 +36,6 @@ export default function AddBike({ navigation }) {
   const [color, setColor] = useState("");
   const [mileage, setMileage] = useState("");
 
-  // Datos de tipo de bicicleta
   const [typeOpen, setTypeOpen] = useState(false);
   const [typeValue, setTypeValue] = useState(null);
   const [typeItems, setTypeItems] = useState([
@@ -46,7 +45,6 @@ export default function AddBike({ navigation }) {
     { label: "Híbrida", value: "hibrida" },
   ]);
 
-  // datos talla del cuadro
   const [frameOpen, setFrameOpen] = useState(false);
   const [frameValue, setFrameValue] = useState(null);
   const [frameItems, setFrameItems] = useState([
@@ -56,16 +54,15 @@ export default function AddBike({ navigation }) {
     { label: "XL", value: "XL" },
   ]);
 
-  //Datos de tamaño de rueda
   const [wheelOpen, setWheelOpen] = useState(false);
   const [wheelValue, setWheelValue] = useState(null);
   const [wheelItems, setWheelItems] = useState([
-    { label: '26″', value: "26" },
-    { label: '27.5″', value: "27.5" },
-    { label: '29″', value: "29" },
+    { label: "26″", value: "26" },
+    { label: "27.5″", value: "27.5" },
+    { label: "29″", value: "29" },
   ]);
+const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  // Cerrar los demás dropdowns
   useEffect(() => {
     if (typeOpen) {
       setFrameOpen(false);
@@ -85,7 +82,21 @@ export default function AddBike({ navigation }) {
     }
   }, [wheelOpen]);
 
-  const handleSave = async () => {
+  useEffect(() => {
+    if (bike) {
+      setName(bike.name);
+      setBrand(bike.brand);
+      setModel(bike.model);
+      setYear(String(bike.year));
+      setColor(bike.color);
+      setMileage(String(bike.mileage));
+      setTypeValue(bike.type);
+      setFrameValue(bike.frameSize);
+      setWheelValue(bike.wheelSize);
+    }
+  }, [bike]);
+
+  const handleUpdate = async () => {
     if (
       !name.trim() ||
       !brand.trim() ||
@@ -100,8 +111,7 @@ export default function AddBike({ navigation }) {
       return Alert.alert("Error", "Por favor completa todos los campos");
     }
     try {
-      await addDoc(collection(db, "bikes"), {
-        owner: user.uid,
+      await updateDoc(doc(db, "bikes", bike.id), {
         name,
         brand,
         model,
@@ -111,13 +121,12 @@ export default function AddBike({ navigation }) {
         frameSize: frameValue,
         wheelSize: wheelValue,
         mileage: Number(mileage),
-        createdAt: serverTimestamp(),
       });
-      Alert.alert("¡Listo!", "Bicicleta añadida con éxito");
+      Alert.alert("¡Actualizado!", "Los cambios han sido guardados");
       navigation.goBack();
     } catch (err) {
       console.error(err);
-      Alert.alert("Error al guardar", err.message);
+      Alert.alert("Error", err.message);
     }
   };
 
@@ -126,29 +135,25 @@ export default function AddBike({ navigation }) {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <ScrollView
-        contentContainerStyle={styles.inner}
-        keyboardShouldPersistTaps="handled"
-      >
-   
+      <ScrollView contentContainerStyle={styles.inner} keyboardShouldPersistTaps="handled">
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back-outline" size={24} color="#FFF" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Añadir bicicleta</Text>
+          <Text style={styles.headerTitle}>Editar bicicleta</Text>
         </View>
 
-      
+       
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Información básica</Text>
 
           <Text style={styles.label}>Nombre de la bicicleta</Text>
           <TextInput
             style={styles.input}
-            placeholder="Mi bicicleta"
-            placeholderTextColor="#888"
             value={name}
             onChangeText={setName}
+            placeholder="Mi bicicleta"
+            placeholderTextColor="#888"
           />
 
           <View style={styles.row}>
@@ -156,20 +161,20 @@ export default function AddBike({ navigation }) {
               <Text style={styles.label}>Marca</Text>
               <TextInput
                 style={styles.input}
-                placeholder="trek"
-                placeholderTextColor="#888"
                 value={brand}
                 onChangeText={setBrand}
+                placeholder="Trek"
+                placeholderTextColor="#888"
               />
             </View>
             <View style={styles.half}>
               <Text style={styles.label}>Modelo</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Marlin 7"
-                placeholderTextColor="#888"
                 value={model}
                 onChangeText={setModel}
+                placeholder="Marlin 7"
+                placeholderTextColor="#888"
               />
             </View>
           </View>
@@ -179,21 +184,21 @@ export default function AddBike({ navigation }) {
               <Text style={styles.label}>Año</Text>
               <TextInput
                 style={styles.input}
-                placeholder="2023"
-                placeholderTextColor="#888"
-                keyboardType="numeric"
                 value={year}
                 onChangeText={setYear}
+                keyboardType="numeric"
+                placeholder="2023"
+                placeholderTextColor="#888"
               />
             </View>
             <View style={styles.half}>
               <Text style={styles.label}>Color</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Rojo"
-                placeholderTextColor="#888"
                 value={color}
                 onChangeText={setColor}
+                placeholder="Rojo"
+                placeholderTextColor="#888"
               />
             </View>
           </View>
@@ -223,7 +228,7 @@ export default function AddBike({ navigation }) {
           </View>
         </View>
 
-       
+        
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Especificaciones técnicas</Text>
 
@@ -283,19 +288,46 @@ export default function AddBike({ navigation }) {
           <Text style={styles.label}>Kilometraje actual</Text>
           <TextInput
             style={styles.input}
-            placeholder="1"
-            placeholderTextColor="#888"
-            keyboardType="numeric"
             value={mileage}
             onChangeText={setMileage}
+            keyboardType="numeric"
+            placeholder="1"
+            placeholderTextColor="#888"
           />
         </View>
 
-       
-        <TouchableOpacity style={styles.primaryBtn} onPress={handleSave}>
-          <Text style={styles.primaryBtnText}>Añadir bicicleta</Text>
+        <TouchableOpacity style={styles.primaryBtn} onPress={() => setShowConfirmModal(true)}>
+          <Text style={styles.primaryBtnText}>Guardar cambios</Text>
         </TouchableOpacity>
       </ScrollView>
+      {showConfirmModal && (
+  <View style={styles.modalOverlay}>
+    <View style={styles.modalContainer}>
+      <Ionicons name="help-circle-outline" size={48} color="#FFD700" />
+      <Text style={styles.modalTitle}>¿Guardar cambios?</Text>
+      <Text style={styles.modalMessage}>¿Estás seguro de actualizar los datos de esta bicicleta?</Text>
+
+      <View style={styles.modalButtons}>
+        <TouchableOpacity
+          style={[styles.modalButton, { backgroundColor: "#555" }]}
+          onPress={() => setShowConfirmModal(false)}
+        >
+          <Text style={styles.modalButtonText}>Cancelar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.modalButton, { backgroundColor: "#1E90FF" }]}
+          onPress={() => {
+            setShowConfirmModal(false);
+            handleUpdate();
+          }}
+        >
+          <Text style={styles.modalButtonText}>Confirmar</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </View>
+)}
+
     </KeyboardAvoidingView>
   );
 }
@@ -356,7 +388,7 @@ const styles = StyleSheet.create({
   },
 
   dropdownWrapper: {
-    elevation: 10,   // Android
+    elevation: 10,
   },
   dropdown: {
     backgroundColor: "#333",
@@ -388,4 +420,53 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+  modalOverlay: {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: "rgba(0,0,0,0.6)",
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 100,
+},
+modalContainer: {
+  width: "80%",
+  backgroundColor: "#2C2C2C",
+  borderRadius: 12,
+  padding: 20,
+  alignItems: "center",
+},
+modalTitle: {
+  color: "#FFF",
+  fontSize: 18,
+  fontWeight: "bold",
+  marginTop: 12,
+},
+modalMessage: {
+  color: "#CCC",
+  fontSize: 14,
+  marginTop: 8,
+  textAlign: "center",
+},
+modalButtons: {
+  flexDirection: "row",
+  marginTop: 20,
+  justifyContent: "space-between",
+  width: "100%",
+},
+modalButton: {
+  flex: 1,
+  paddingVertical: 10,
+  marginHorizontal: 6,
+  borderRadius: 20,
+  alignItems: "center",
+},
+modalButtonText: {
+  color: "#FFF",
+  fontSize: 14,
+  fontWeight: "600",
+},
+
 });

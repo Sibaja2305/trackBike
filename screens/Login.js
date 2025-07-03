@@ -1,4 +1,3 @@
-// screens/Login.js
 
 import React, { useState, useContext } from "react";
 import {
@@ -19,24 +18,22 @@ import { AuthContext } from "../context/AuthContext";
 const auth = getAuth(appFirebase);
 
 export default function Login({ navigation }) {
-  const [email, setEmail]             = useState("");
-  const [password, setPassword]       = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe]   = useState(false);
-  const { logIn }                     = useContext(AuthContext);
-
+  const [rememberMe, setRememberMe] = useState(false);
+  const { logIn } = useContext(AuthContext);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const handleLogin = async () => {
     try {
-      const { user } = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      logIn(user); // mantiene el flujo actual
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      logIn(user); 
       Alert.alert("¡Éxito!", `Bienvenido ${user.email}`);
     } catch (err) {
       console.error(err);
-      Alert.alert("Error", err.message);
+      setErrorMessage("Correo o contraseña incorrecta.");
+      setShowErrorModal(true);
     }
   };
 
@@ -45,13 +42,12 @@ export default function Login({ navigation }) {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      {/* Logo y tagline */}
       <Text style={styles.logo}>trackbike</Text>
       <Text style={styles.tagline}>Gestiona tu bicicleta</Text>
 
-      {/* Formulario */}
+      
       <View style={styles.form}>
-        {/* Email */}
+    
         <Text style={styles.label}>Correo electrónico</Text>
         <View style={styles.inputContainer}>
           <TextInput
@@ -65,10 +61,13 @@ export default function Login({ navigation }) {
           />
         </View>
 
-        {/* Password con link de “olvidaste” */}
         <View style={styles.labelRow}>
           <Text style={styles.label}>Contraseña</Text>
-          <TouchableOpacity onPress={() => {/* navegar a Recuperar */}}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("ResetPassword");
+            }}
+          >
             <Text style={styles.forgot}>¿Olvidaste tu contraseña?</Text>
           </TouchableOpacity>
         </View>
@@ -81,9 +80,7 @@ export default function Login({ navigation }) {
             value={password}
             onChangeText={setPassword}
           />
-          <TouchableOpacity
-            onPress={() => setShowPassword(!showPassword)}
-          >
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
             <Ionicons
               name={showPassword ? "eye-off-outline" : "eye-outline"}
               size={20}
@@ -92,7 +89,7 @@ export default function Login({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        {/* Recordarme */}
+      
         <TouchableOpacity
           style={styles.rememberRow}
           onPress={() => setRememberMe(!rememberMe)}
@@ -105,22 +102,24 @@ export default function Login({ navigation }) {
           <Text style={styles.rememberText}>Recordarme</Text>
         </TouchableOpacity>
 
-        {/* Botón principal */}
+        
         <TouchableOpacity style={styles.primaryBtn} onPress={handleLogin}>
           <Text style={styles.primaryBtnText}>Iniciar sesión</Text>
         </TouchableOpacity>
 
-        {/* Separador */}
+     
         <View style={styles.separatorRow}>
           <View style={styles.line} />
           <Text style={styles.separatorText}>O continuar con</Text>
           <View style={styles.line} />
         </View>
 
-        {/* Google */}
+   
         <TouchableOpacity
           style={styles.googleBtn}
-          onPress={() => {/* lógica Google Sign-In */}}
+          onPress={() => {
+            
+          }}
         >
           <Ionicons name="logo-google" size={20} color="#4285F4" />
           <Text style={styles.googleText}>Continuar con Google</Text>
@@ -129,13 +128,26 @@ export default function Login({ navigation }) {
         {/* Footer */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>¿Necesitas una cuenta? </Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Register")}
-          >
+          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
             <Text style={styles.footerLink}>Registrar</Text>
           </TouchableOpacity>
         </View>
       </View>
+      {showErrorModal && (
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Ionicons name="alert-circle-outline" size={48} color="#FFD700" />
+            <Text style={styles.modalTitle}>Error de inicio de sesión</Text>
+            <Text style={styles.modalMessage}>{errorMessage}</Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setShowErrorModal(false)}
+            >
+              <Text style={styles.modalButtonText}>Aceptar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </KeyboardAvoidingView>
   );
 }
@@ -278,4 +290,47 @@ const styles = StyleSheet.create({
     color: "#1E90FF",
     fontSize: 12,
   },
+  modalOverlay: {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: "rgba(0,0,0,0.6)",
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 100,
+},
+modalContainer: {
+  width: "80%",
+  backgroundColor: "#2C2C2C",
+  borderRadius: 12,
+  padding: 20,
+  alignItems: "center",
+},
+modalTitle: {
+  color: "#FFF",
+  fontSize: 18,
+  fontWeight: "bold",
+  marginTop: 12,
+},
+modalMessage: {
+  color: "#CCC",
+  fontSize: 14,
+  marginTop: 8,
+  textAlign: "center",
+},
+modalButton: {
+  marginTop: 20,
+  backgroundColor: "#1E90FF",
+  borderRadius: 20,
+  paddingVertical: 10,
+  paddingHorizontal: 24,
+},
+modalButtonText: {
+  color: "#FFF",
+  fontSize: 14,
+  fontWeight: "600",
+},
+
 });

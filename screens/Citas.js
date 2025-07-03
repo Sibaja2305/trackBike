@@ -1,4 +1,4 @@
-// screens/Citas.js
+
 
 import React from "react";
 import {
@@ -32,7 +32,7 @@ export default function Citas({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
+      
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back-outline" size={24} color="#FFF" />
@@ -48,7 +48,7 @@ export default function Citas({ navigation }) {
 
         {appointments.map((appt) => (
           <View key={appt.id} style={styles.card}>
-            {/* Título y subtítulo */}
+           
             <View style={styles.cardHeader}>
               <Ionicons
                 name="calendar-outline"
@@ -62,7 +62,7 @@ export default function Citas({ navigation }) {
               </View>
             </View>
 
-            {/* Datos: fecha / hora / costo */}
+            
             <View style={styles.row}>
               <View style={styles.field}>
                 <Text style={styles.fieldLabel}>Fecha</Text>
@@ -78,7 +78,7 @@ export default function Citas({ navigation }) {
               </View>
             </View>
 
-            {/* Botones */}
+      
             <View style={styles.rowButtons}>
               <TouchableOpacity style={styles.btnCancel}>
                 <Text style={styles.btnText}>Cancelar</Text>

@@ -1,5 +1,3 @@
-// screens/Register.js
-
 import React, { useState, useContext } from "react";
 import {
   View,
@@ -26,22 +24,29 @@ const auth = getAuth(appFirebase);
 const db = getFirestore(appFirebase);
 
 export default function Register({ navigation }) {
-  const [fullName, setFullName]             = useState("");
-  const [email, setEmail]                   = useState("");
-  const [password, setPassword]             = useState("");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [termsAccepted, setTermsAccepted]   = useState(false);
-  const [showPassword, setShowPassword]     = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { logIn } = useContext(AuthContext);
 
   const handleRegister = async () => {
-    if (!fullName.trim()) return Alert.alert("Error", "Ingresa tu nombre completo");
-    if (password !== confirmPassword) return Alert.alert("Error", "Las contraseñas no coinciden");
-    if (!termsAccepted) return Alert.alert("Error", "Acepta términos y condiciones");
+    if (!fullName.trim())
+      return Alert.alert("Error", "Ingresa tu nombre completo");
+    if (password !== confirmPassword)
+      return Alert.alert("Error", "Las contraseñas no coinciden");
+    if (!termsAccepted)
+      return Alert.alert("Error", "Acepta términos y condiciones");
 
     try {
-      const { user } = await createUserWithEmailAndPassword(auth, email, password);
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       await updateProfile(user, { displayName: fullName });
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
@@ -70,7 +75,6 @@ export default function Register({ navigation }) {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <ScrollView contentContainerStyle={styles.inner}>
-        {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={24} color="#FFF" />
@@ -78,15 +82,12 @@ export default function Register({ navigation }) {
           <Text style={styles.headerTitle}>Crear cuenta</Text>
         </View>
 
-        {/* Título */}
         <Text style={styles.logo}>
           Únete a <Text style={styles.logoHighlight}>trackbike</Text>
         </Text>
         <Text style={styles.tagline}>Gestiona tu bicicleta</Text>
 
-        {/* Formulario */}
         <View style={styles.form}>
-
           <Text style={styles.label}>Nombre completo</Text>
           <TextInput
             style={styles.input}
@@ -140,10 +141,16 @@ export default function Register({ navigation }) {
             style={styles.rememberRow}
             onPress={() => setTermsAccepted(!termsAccepted)}
           >
-            <View style={[styles.checkbox, termsAccepted && styles.checkboxChecked]}>
-              {termsAccepted && <Ionicons name="checkmark" size={16} color="#1E90FF" />}
+            <View
+              style={[styles.checkbox, termsAccepted && styles.checkboxChecked]}
+            >
+              {termsAccepted && (
+                <Ionicons name="checkmark" size={16} color="#1E90FF" />
+              )}
             </View>
-            <Text style={styles.rememberText}>Acepto los términos y condiciones</Text>
+            <Text style={styles.rememberText}>
+              Acepto los términos y condiciones
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -154,14 +161,12 @@ export default function Register({ navigation }) {
             <Text style={styles.primaryBtnText}>Registrarse</Text>
           </TouchableOpacity>
 
-          {/* Separador */}
           <View style={styles.separatorRow}>
             <View style={styles.line} />
             <Text style={styles.separatorText}>O Registrarse con</Text>
             <View style={styles.line} />
           </View>
 
-          {/* Google */}
           <TouchableOpacity
             style={styles.googleBtn}
             onPress={() => Alert.alert("Google Sign-In")}
@@ -169,7 +174,6 @@ export default function Register({ navigation }) {
             <Ionicons name="logo-google" size={24} color="#4285F4" />
           </TouchableOpacity>
 
-          {/* Footer */}
           <Text style={styles.footerText}>
             Al registrarte, aceptas nuestros{" "}
             <Text style={styles.footerLink}>Términos y condiciones</Text> y{" "}
