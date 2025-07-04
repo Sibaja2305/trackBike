@@ -24,7 +24,14 @@ import appFirebase from "../credenciales";
 import { AuthContext } from "../context/AuthContext";
 
 const db = getFirestore(appFirebase);
-
+/**
+ * 
+ * AddBike es una pantalla para añadir una nueva bicicleta al sistema.
+ * Permite al usuario ingresar información básica y técnica de la bicicleta.
+ * Incluye campos para nombre, marca, modelo, año, color, tipo de bicicleta,
+ * talla del cuadro, tamaño de rueda y kilometraje.
+ * 
+ */
 export default function AddBike({ navigation }) {
   const { user } = useContext(AuthContext);
 

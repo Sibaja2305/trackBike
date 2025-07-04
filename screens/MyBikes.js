@@ -23,7 +23,13 @@ import appFirebase from "../credenciales";
 import { AuthContext } from "../context/AuthContext";
 import { useFocusEffect } from "@react-navigation/native";
 const db = getFirestore(appFirebase);
-
+/**
+ * 
+ * MyBikes es una pantalla que muestra las bicicletas del usuario.
+ * Permite al usuario ver, editar y eliminar sus bicicletas.
+ * Incluye una lista de tarjetas con información de cada bicicleta,
+ * un botón para agregar una nueva bicicleta y un modal de confirmación para eliminar bicicletas.
+ */
 export default function MyBikes({ navigation }) {
   const { user } = useContext(AuthContext);
   const [bikes, setBikes] = useState([]);

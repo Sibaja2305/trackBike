@@ -14,7 +14,13 @@ import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import appFirebase from "../credenciales";
 
 const auth = getAuth(appFirebase);
-
+/**
+ * 
+ * RecoverPassword es una pantalla que permite a los usuarios recuperar su contraseña.
+ * Incluye un campo para ingresar el correo electrónico asociado a la cuenta,
+ *  un botón para enviar un enlace de recuperación,
+ * y un modal para mostrar mensajes de éxito o error. 
+ */
 export default function RecoverPassword({ navigation }) {
   const [email, setEmail] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
