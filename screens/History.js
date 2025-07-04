@@ -46,7 +46,13 @@ const canceledData = [
     cost: "₡15000",
   },
 ];
-
+/**
+ * 
+ * History es una pantalla que muestra el historial de mantenimiento de bicicletas.
+ * Permite al usuario ver las citas completadas y canceladas.
+ * Incluye una barra de búsqueda, pestañas para filtrar por citas completadas o canceladas,
+ * y una lista de tarjetas que muestran los detalles de cada cita.
+ */
 export default function History({ navigation }) {
   const [activeTab, setActiveTab] = useState("completed");
   const data = activeTab === "completed" ? completedData : canceledData;

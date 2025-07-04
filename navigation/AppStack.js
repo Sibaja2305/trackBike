@@ -7,7 +7,12 @@ import History from "../screens/History";
 import HistoryDetail from "../screens/HistoryDetail";
 import EditBike from "../screens/EditBike";
 const Stack = createNativeStackNavigator();
-
+/**
+ * 
+ * AppStack es el principal navegador de pilas para la aplicación. 
+ * Incluye las pestañas y pantallas principales para agregar bicicletas, ver bicicletas e historial. 
+ * Se utiliza para navegar entre diferentes pantallas en la aplicación.
+ */
 export default function AppStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
