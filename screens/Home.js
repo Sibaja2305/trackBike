@@ -105,12 +105,12 @@ export default function Home() {
           <ActionButton
             icon="play-outline"
             label="Tutoriales"
-            onPress={() => {}}
+            onPress={() => navigation.navigate("Tutorials")}
           />
           <ActionButton
             icon="cart-outline"
             label="Productos"
-            onPress={() => {}}
+            onPress={() => navigation.navigate("Products")}
           />
         </View>
 
