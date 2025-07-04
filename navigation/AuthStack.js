@@ -5,7 +5,12 @@ import Register from "../screens/Register";
 import ResetPassword from "../screens/ResetPassword";
 
 const Stack = createNativeStackNavigator();
-
+/**
+ * 
+ * AuthStack es el navegador de pilas para las pantallas de autenticación.
+ * Contiene las pantallas de inicio de sesión, registro y restablecimiento de contraseña.
+ * Se utiliza para gestionar el acceso del usuario a la aplicación.
+ */
 export default function AuthStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>

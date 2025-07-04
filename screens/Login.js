@@ -16,7 +16,13 @@ import appFirebase from "../credenciales";
 import { AuthContext } from "../context/AuthContext";
 
 const auth = getAuth(appFirebase);
-
+/**
+ * 
+ * Login es una pantalla que permite a los usuarios iniciar sesión en la aplicación.
+ * Incluye campos para correo electrónico y contraseña, con opciones para mostrar/ocultar la contraseña,
+ * y recordar la sesión.
+ * También incluye un botón para iniciar sesión, un enlace para restablecer la contraseña
+ */
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

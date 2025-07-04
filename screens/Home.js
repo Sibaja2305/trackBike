@@ -9,7 +9,12 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigation } from "@react-navigation/native";
-
+/**
+ * 
+ * ActionButton es un componente reutilizable que representa un botón de acción
+ * con un ícono y una etiqueta. Se utiliza para realizar acciones rápidas en la pantalla de
+ * inicio, como agendar citas, ver historial, tutoriales y productos.
+ */
 function ActionButton({ icon, label, onPress }) {
   return (
     <TouchableOpacity style={styles.actionBtn} onPress={onPress}>
@@ -18,7 +23,12 @@ function ActionButton({ icon, label, onPress }) {
     </TouchableOpacity>
   );
 }
-
+/**
+ * 
+ * ListItem es un componente que representa un elemento de lista
+ * con un ícono, título y tiempo estimado de lectura.
+ * Se utiliza para mostrar consejos de mantenimiento y recordatorios en la pantalla de inicio.
+ */
 function ListItem({ icon, title, time }) {
   return (
     <View style={styles.listItem}>
@@ -30,7 +40,14 @@ function ListItem({ icon, title, time }) {
     </View>
   );
 }
-
+/**
+ * 
+ * Home es la pantalla principal de la aplicación, donde el usuario puede ver su información,
+ * acciones rápidas, consejos de mantenimiento y recordatorios.
+ * Incluye un encabezado con el logo y un ícono de perfil,
+ * un saludo personalizado, una tarjeta de próximo mantenimiento,
+ * botones de acción rápida y listas de consejos y recordatorios. 
+ */
 export default function Home() {
   const navigation = useNavigation();
   const { user, logOut } = useContext(AuthContext);

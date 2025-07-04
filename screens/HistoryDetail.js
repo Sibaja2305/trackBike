@@ -8,7 +8,13 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-
+/**
+ * 
+ * MaintenanceDetails es una pantalla que muestra los detalles de un mantenimiento de bicicleta.
+ * Incluye información general sobre la cita, desglose de costos y nota del técnico.
+ * Permite al usuario ver el título, estado, descripción, fecha, hora, taller,
+ * ubicación, técnico, duración, costos y una nota del técnico.
+ */
 export default function MaintenanceDetails({ navigation }) {
   const [data, setData] = useState(null);
 
