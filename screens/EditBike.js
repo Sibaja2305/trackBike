@@ -22,7 +22,13 @@ import { AuthContext } from "../context/AuthContext";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { useFocusEffect } from '@react-navigation/native';
 const db = getFirestore(appFirebase);
-
+/**
+ * 
+ * EditBike es una pantalla para editar los detalles de una bicicleta existente.
+ * Permite al usuario actualizar información básica y técnica de la bicicleta.
+ * Incluye campos para nombre, marca, modelo, año, color, tipo de bicicleta,
+ * talla del cuadro, tamaño de rueda y kilometraje. 
+ */
 export default function EditBike() {
   const { user } = useContext(AuthContext);
   const route = useRoute();

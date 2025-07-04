@@ -9,7 +9,14 @@ import Productos  from "../screens/Productos";
 import Perfil     from "../screens/Perfil";
 
 const Tab = createBottomTabNavigator();
-
+/**
+ * 
+ * @returns AppTabs es el navegador de pestañas principal de la aplicación.
+ * Contiene las pestañas de Inicio, Citas, Tutoriales, Productos y Perfil.
+ * Cada pestaña tiene su propio componente asociado.
+ * Se utiliza para navegar entre diferentes secciones de la aplicación.
+ * 
+ */
 export default function AppTabs() {
   return (
     <Tab.Navigator

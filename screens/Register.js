@@ -22,7 +22,13 @@ import { AuthContext } from "../context/AuthContext";
 
 const auth = getAuth(appFirebase);
 const db = getFirestore(appFirebase);
-
+/**
+ * 
+ * Register es una pantalla que permite a los usuarios crear una nueva cuenta.
+ * Incluye campos para nombre completo, correo electrónico, contraseña y confirmación de contraseña.
+ * También incluye una opción para aceptar términos y condiciones,
+ * y un botón para registrarse.
+ */
 export default function Register({ navigation }) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
