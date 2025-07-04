@@ -6,6 +6,8 @@ import MyBikes from "../screens/MyBikes";
 import History from "../screens/History";
 import HistoryDetail from "../screens/HistoryDetail";
 import EditBike from "../screens/EditBike";
+import Tutorials from "../screens/Tutorials";
+import Products from "../screens/Products";
 const Stack = createNativeStackNavigator();
 /**
  * 
@@ -24,6 +26,8 @@ export default function AppStack() {
       <Stack.Screen name="History" component={History} />
        <Stack.Screen name="HistoryDetail" component={HistoryDetail} />
        <Stack.Screen name="EditBike" component={EditBike} />
+       <Stack.Screen name="Tutorials" component={Tutorials} />
+       <Stack.Screen name="Products" component={Products} />
     </Stack.Navigator>
   );
 }

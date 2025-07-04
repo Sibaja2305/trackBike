@@ -3,10 +3,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
 import Home       from "../screens/Home";
-import Citas      from "../screens/Citas";
-import Tutoriales from "../screens/Tutoriales";
-import Productos  from "../screens/Productos";
-import Perfil     from "../screens/Perfil";
+import Citas      from "../screens/Appointments";
+import Tutoriales from "../screens/Tutorials";
+import Productos  from "../screens/Products";
+import Perfil     from "../screens/Profile";
 
 const Tab = createBottomTabNavigator();
 /**
